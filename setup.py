@@ -34,6 +34,7 @@ install_requires = ["defusedxml", "passlib", "vobject>=0.9.6",
 bcrypt_requires = ["passlib[bcrypt]", "bcrypt"]
 # typeguard requires pytest<7
 test_requires = ["pytest<7", "typeguard", "waitress", *bcrypt_requires]
+ldap_requires = ["python-ldap<=3.4.2"]
 
 setup(
     name="Radicale",
@@ -51,7 +52,7 @@ setup(
     package_data={"radicale": [*web_files, "py.typed"]},
     entry_points={"console_scripts": ["radicale = radicale.__main__:run"]},
     install_requires=install_requires,
-    extras_require={"test": test_requires, "bcrypt": bcrypt_requires},
+    extras_require={"test": test_requires, "bcrypt": bcrypt_requires, "ldap": ldap_requires},
     keywords=["calendar", "addressbook", "CalDAV", "CardDAV"],
     python_requires=">=3.6.0",
     classifiers=[
