@@ -31,3 +31,4 @@ ENTRYPOINT [ "/app/bin/python", "/app/bin/radicale"]
 CMD ["--hosts", "0.0.0.0:5232"]
 
 USER 1000
+
