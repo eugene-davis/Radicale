@@ -18,10 +18,12 @@ FROM python:3-alpine
 WORKDIR /app
 
 RUN adduser radicale --home /var/lib/radicale --system --uid 1000 --disabled-password \
-    && apk add --no-cache ca-certificates openssl openldap
+    && apk add --no-cache ca-certificates openssl openldap-clients
 
 COPY --chown=1000 --from=builder /app/venv /app
 
+# Radicale user
+USER 1000
 # Persistent storage for data
 VOLUME /var/lib/radicale
 # TCP port of Radicale
@@ -30,4 +32,3 @@ EXPOSE 5232
 ENTRYPOINT [ "/app/bin/python", "/app/bin/radicale"]
 CMD ["--hosts", "0.0.0.0:5232"]
 
-USER 1000
