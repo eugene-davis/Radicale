@@ -8,7 +8,7 @@ ARG VERSION=master
 # Optional dependencies (e.g. bcrypt)
 ARG DEPENDENCIES=bcrypt
 
-RUN apk add --no-cache --virtual gcc libffi-dev musl-dev \
+RUN apk add --no-cache --virtual ca-certificates openssl gcc libffi-dev musl-dev openldap-dev \
     && python -m venv /app/venv \
     && /app/venv/bin/pip install --no-cache-dir "Radicale[${DEPENDENCIES}] @ https://github.com/Kozea/Radicale/archive/${VERSION}.tar.gz"
 
@@ -18,7 +18,7 @@ FROM python:3-alpine
 WORKDIR /app
 
 RUN adduser radicale --home /var/lib/radicale --system --uid 1000 --disabled-password \
-    && apk add --no-cache ca-certificates openssl
+    && apk add --no-cache ca-certificates openssl openldap
 
 COPY --chown=1000 --from=builder /app/venv /app
 
@@ -31,4 +31,3 @@ ENTRYPOINT [ "/app/bin/python", "/app/bin/radicale"]
 CMD ["--hosts", "0.0.0.0:5232"]
 
 USER 1000
-

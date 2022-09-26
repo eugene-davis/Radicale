@@ -7,7 +7,7 @@ COPY . /app
 
 WORKDIR /app
 
-RUN apk add --no-cache --virtual gcc libffi-dev musl-dev \
+RUN apk add --no-cache --virtual ca-certificates openssl gcc libffi-dev musl-dev openldap-dev \
     && python -m venv /app/venv \
     && /app/venv/bin/pip install --no-cache-dir .[${DEPENDENCIES}]
 
@@ -16,7 +16,7 @@ FROM python:3-alpine
 WORKDIR /app
 
 RUN adduser radicale --home /var/lib/radicale --system --uid 1000 --disabled-password \
-    && apk add --no-cache ca-certificates openssl
+    && apk add --no-cache ca-certificates openssl openldap
 
 COPY --chown=1000 --from=builder /app/venv /app
 
