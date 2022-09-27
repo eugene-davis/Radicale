@@ -22,8 +22,10 @@ Following parameters are needed in the configuration
    ldap_secret    The password of the ldap_reader_dn
    ldap_filter    The search filter to find the user to authenticate by the username
    ldap_load_groups If the groups of the authenticated users need to be loaded
+   ldaps_certificate The path to a certificate to validate ldaps with
 """
 
+import os
 import ldap
 from radicale import auth, config
 from radicale.log import logger
@@ -41,9 +43,12 @@ class Auth(auth.BaseAuth):
         super().__init__(configuration)
         self._ldap_uri = configuration.get("auth", "ldap_uri")
         self._ldap_base = configuration.get("auth", "ldap_base")
-        self._ldap_reader_dn = configuration.get("auth", "ldap_reader_dn")
+
+        # Load LDAP reader details via env first if available
+        self._ldap_reader_dn = os.environ.get("AUTH_LDAP_READER_DN") if os.environ.get("AUTH_LDAP_READER_DN", False) else configuration.get("auth", "ldap_reader_dn")
+        self._ldap_secret = os.environ.get("AUTH_LDAP_SECRET") if os.environ.get("AUTH_LDAP_SECRET", False) else configuration.get("auth", "ldap_secret")
+
         self._ldap_load_groups = configuration.get("auth", "ldap_load_groups")
-        self._ldap_secret = configuration.get("auth", "ldap_secret")
         self._ldap_filter = configuration.get("auth", "ldap_filter")
         self._ldaps_certificate = configuration.get("auth", "ldaps_certificate")
         # If a ldaps_certificate is set, configure ldap to use it
